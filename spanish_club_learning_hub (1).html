@@ -1,0 +1,1405 @@
+<!DOCTYPE html>
+<html lang="es" class="dark scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Centro de Aprendizaje - Club de Español</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Font Awesome Icons CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Google Fonts - Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#15803d',
+              800: '#166534',
+              900: '#14532d',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #0f172a;
+      color: #f8fafc;
+    }
+    
+    /* Custom Scrollbars */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #1e293b;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #475569;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #64748b;
+    }
+
+    .glass-card {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .glass-nav {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* Flip Card Animation for Flashcards */
+    .perspective-1000 {
+      perspective: 1000px;
+    }
+    .transform-style-3d {
+      transform-style: preserve-3d;
+    }
+    .backface-hidden {
+      backface-visibility: hidden;
+    }
+    .rotate-y-180 {
+      transform: rotateY(180deg);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased selection:bg-pink-500 selection:text-white">
+
+  <!-- Navigation Header -->
+  <header class="sticky top-0 z-50 glass-nav transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <!-- Brand Logo -->
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 via-rose-500 to-pink-600 flex items-center justify-center text-white font-black text-xl shadow-lg shadow-pink-500/20">
+            🇪🇸
+          </div>
+          <div>
+            <h1 class="font-extrabold text-lg text-white tracking-tight flex items-center gap-2">
+              Club de Español <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-pink-500/20 text-pink-400 border border-pink-500/30">Hub</span>
+            </h1>
+            <p class="text-[10px] text-slate-400 hidden sm:block" id="nav-subtitle">Aprende, Practica y Comparte</p>
+          </div>
+        </div>
+
+        <!-- Navigation Links -->
+        <nav class="hidden md:flex items-center gap-1 text-sm font-medium">
+          <a href="#chat-section" class="px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800/60 transition flex items-center gap-2">
+            <i class="fas fa-comments text-amber-400"></i> <span data-i18n="nav_chat">Practicar Chat</span>
+          </a>
+          <a href="#games-section" class="px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800/60 transition flex items-center gap-2">
+            <i class="fas fa-gamepad text-emerald-400"></i> <span data-i18n="nav_games">Juegos</span>
+          </a>
+          <a href="#music-section" class="px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800/60 transition flex items-center gap-2">
+            <i class="fas fa-music text-pink-400"></i> <span data-i18n="nav_music">Música</span>
+          </a>
+          <a href="#resources-section" class="px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800/60 transition flex items-center gap-2">
+            <i class="fas fa-photo-video text-indigo-400"></i> <span data-i18n="nav_resources">Recursos</span>
+          </a>
+        </nav>
+
+        <!-- Right Side Actions: Lang Switcher & Add Buttons -->
+        <div class="flex items-center gap-2">
+          <!-- Language Switcher Button -->
+          <button onclick="toggleGlobalLanguage()" id="lang-btn" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-bold text-slate-200 transition flex items-center gap-2 shadow-inner">
+            <span id="lang-flag">🇪🇸</span>
+            <span id="lang-text">ES</span>
+            <i class="fas fa-globe text-pink-400"></i>
+          </button>
+
+          <!-- Add Resource Button -->
+          <button onclick="openAddResourceModal()" class="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-500 hover:to-rose-500 text-white font-semibold text-xs transition shadow-md shadow-pink-600/20 flex items-center gap-1.5">
+            <i class="fas fa-plus"></i>
+            <span class="hidden sm:inline" data-i18n="btn_add_content">Añadir Contenido</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
+
+    <!-- Hero Section -->
+    <section class="relative rounded-3xl overflow-hidden bg-gradient-to-r from-indigo-950 via-slate-900 to-pink-950 border border-slate-800 p-6 sm:p-10 shadow-2xl">
+      <div class="absolute -right-10 -bottom-10 w-80 h-80 bg-pink-500/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute -left-10 -top-10 w-80 h-80 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+      <div class="relative z-10 max-w-3xl space-y-4">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-pink-500/10 border border-pink-500/30 text-pink-300 text-xs font-semibold">
+          <i class="fas fa-sparkles"></i> <span data-i18n="hero_badge">¡Bienvenidos al Club de Español!</span>
+        </div>
+        <h2 class="text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight" data-i18n="hero_title">
+          Tu centro comunitario para dominar el español juntos
+        </h2>
+        <p class="text-slate-300 text-sm sm:text-base leading-relaxed" data-i18n="hero_desc">
+          Un espacio colaborativo donde todos los miembros del club pueden charlar, jugar con la gramática, recomendar canciones, compartir podcasts y películas en español.
+        </p>
+
+        <!-- Quick Stats Counters -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 border-t border-slate-800/80 text-center sm:text-left">
+          <div>
+            <p class="text-2xl font-extrabold text-amber-400" id="stat-members-count">24</p>
+            <p class="text-xs text-slate-400" data-i18n="stat_members">Miembros activos</p>
+          </div>
+          <div>
+            <p class="text-2xl font-extrabold text-emerald-400" id="stat-tracks-count">4</p>
+            <p class="text-xs text-slate-400" data-i18n="stat_songs">Canciones</p>
+          </div>
+          <div>
+            <p class="text-2xl font-extrabold text-pink-400" id="stat-games-count">4</p>
+            <p class="text-xs text-slate-400" data-i18n="stat_games">Juegos educativos</p>
+          </div>
+          <div>
+            <p class="text-2xl font-extrabold text-indigo-400" id="stat-resources-count">6</p>
+            <p class="text-xs text-slate-400" data-i18n="stat_resources">Recursos multimedia</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 1: Community Chat & Practice Forum -->
+    <section id="chat-section" class="space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+        <div>
+          <h3 class="text-2xl font-black text-white flex items-center gap-2">
+            <i class="fas fa-comments text-amber-400"></i>
+            <span data-i18n="chat_section_title">Foro de Práctica y Charla</span>
+          </h3>
+          <p class="text-xs text-slate-400" data-i18n="chat_section_desc">Comparte con otros miembros en español sin miedo a equivocarte.</p>
+        </div>
+
+        <!-- Chat Level Filter -->
+        <div class="flex flex-wrap items-center gap-1.5" id="chat-level-filters">
+          <button onclick="filterChatLevel('all')" data-chat-level="all" class="chat-level-btn px-3 py-1 rounded-lg text-xs font-bold bg-amber-500 text-slate-950 transition">Todos</button>
+          <button onclick="filterChatLevel('beginner')" data-chat-level="beginner" class="chat-level-btn px-3 py-1 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition">Principiante (A1-A2)</button>
+          <button onclick="filterChatLevel('intermediate')" data-chat-level="intermediate" class="chat-level-btn px-3 py-1 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition">Intermedio (B1-B2)</button>
+          <button onclick="filterChatLevel('advanced')" data-chat-level="advanced" class="chat-level-btn px-3 py-1 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition">Avanzado (C1-C2)</button>
+        </div>
+      </div>
+
+      <!-- Chat Daily Prompt Card -->
+      <div class="p-4 rounded-2xl bg-gradient-to-r from-amber-950/60 via-slate-900 to-indigo-950/60 border border-amber-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div class="flex items-start gap-3">
+          <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold text-lg flex-shrink-0">
+            💡
+          </div>
+          <div>
+            <p class="text-xs font-bold text-amber-400 uppercase tracking-wider" data-i18n="chat_prompt_label">Pregunta del Día / Daily Prompt</p>
+            <p class="text-sm font-semibold text-white" id="chat-prompt-text">¿Cuál es tu película o serie favorita en español y por qué?</p>
+          </div>
+        </div>
+        <button onclick="replyToPrompt()" class="px-3.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition flex-shrink-0">
+          <i class="fas fa-reply mr-1"></i> <span data-i18n="chat_btn_reply_prompt">Responder Tema</span>
+        </button>
+      </div>
+
+      <!-- Chat Window & Form Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Message Feed (2 Cols) -->
+        <div class="lg:col-span-2 glass-card rounded-2xl p-4 flex flex-col h-[480px]">
+          <div class="flex-grow overflow-y-auto space-y-3 pr-2" id="chat-messages-container">
+            <!-- Messages rendered dynamically -->
+          </div>
+
+          <!-- Message Composer Form -->
+          <form onsubmit="handleSendChatMessage(event)" class="mt-4 pt-3 border-t border-slate-800 flex items-center gap-2">
+            <input type="text" id="chat-input-text" placeholder="Escribe un mensaje en español..." required class="flex-grow bg-slate-900 border border-slate-700 focus:border-amber-500 rounded-xl px-4 py-2 text-sm text-white focus:outline-none transition">
+            <button type="submit" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm transition flex items-center gap-1.5">
+              <i class="fas fa-paper-plane"></i>
+              <span class="hidden sm:inline" data-i18n="chat_btn_send">Enviar</span>
+            </button>
+          </form>
+        </div>
+
+        <!-- Chat Profile & Guidelines Panel (1 Col) -->
+        <div class="glass-card rounded-2xl p-5 space-y-5">
+          <h4 class="font-bold text-sm text-white flex items-center gap-2 border-b border-slate-800 pb-3">
+            <i class="fas fa-user-circle text-amber-400"></i>
+            <span data-i18n="chat_profile_title">Tu Perfil en el Chat</span>
+          </h4>
+
+          <div class="space-y-3">
+            <div>
+              <label class="text-xs font-semibold text-slate-300 block mb-1" data-i18n="chat_user_name_label">Tu Nombre / Apodo:</label>
+              <input type="text" id="chat-user-name" value="Estudiante" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-white focus:border-amber-500 focus:outline-none">
+            </div>
+
+            <div>
+              <label class="text-xs font-semibold text-slate-300 block mb-1" data-i18n="chat_user_level_label">Tu Nivel de Español:</label>
+              <select id="chat-user-level" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-white focus:border-amber-500 focus:outline-none">
+                <option value="Principiante">Principiante (A1-A2)</option>
+                <option value="Intermedio" selected>Intermedio (B1-B2)</option>
+                <option value="Avanzado">Avanzado (C1-C2)</option>
+                <option value="Nativo">Hablante Nativo</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="p-3 rounded-xl bg-slate-900/80 border border-slate-800 space-y-2">
+            <p class="text-xs font-bold text-slate-200 flex items-center gap-1.5">
+              <i class="fas fa-shield-alt text-emerald-400"></i>
+              <span data-i18n="chat_rules_title">Reglas del Foro:</span>
+            </p>
+            <ul class="text-[11px] text-slate-400 space-y-1 list-disc list-inside">
+              <li data-i18n="chat_rule_1">Sé amable y apoya a los demás aprendices.</li>
+              <li data-i18n="chat_rule_2">Está bien cometer errores, ¡así se aprende!</li>
+              <li data-i18n="chat_rule_3">Ayuda a corregir con respeto si te lo piden.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: Interactive Games Arcade Center -->
+    <section id="games-section" class="space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+        <div>
+          <h3 class="text-2xl font-black text-white flex items-center gap-2">
+            <i class="fas fa-gamepad text-emerald-400"></i>
+            <span data-i18n="games_section_title">Zona de Juegos Interactivos</span>
+          </h3>
+          <p class="text-xs text-slate-400" data-i18n="games_section_desc">Aprende gramática, vocabulario y comprensión auditiva de forma divertida.</p>
+        </div>
+
+        <!-- Game Selector Tabs -->
+        <div class="flex flex-wrap gap-2">
+          <button onclick="switchGameTab('conjugator')" id="game-tab-conjugator" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-emerald-600 text-white transition flex items-center gap-1.5">
+            <i class="fas fa-spell-check"></i> <span data-i18n="game_tab_conjugator">Conjugador</span>
+          </button>
+          <button onclick="switchGameTab('matching')" id="game-tab-matching" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition flex items-center gap-1.5">
+            <i class="fas fa-th-large"></i> <span data-i18n="game_tab_matching">Parejas</span>
+          </button>
+          <button onclick="switchGameTab('scramble')" id="game-tab-scramble" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition flex items-center gap-1.5">
+            <i class="fas fa-align-left"></i> <span data-i18n="game_tab_scramble">La Frase</span>
+          </button>
+          <button onclick="switchGameTab('audio')" id="game-tab-audio" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition flex items-center gap-1.5">
+            <i class="fas fa-volume-up"></i> <span data-i18n="game_tab_audio">Comprensión</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- GAME 1: Verb Conjugator Master -->
+      <div id="game-container-conjugator" class="glass-card rounded-3xl p-6 space-y-6">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+          <!-- Filters: Level & Tense -->
+          <div class="flex flex-wrap gap-3">
+            <div>
+              <label class="text-[11px] font-bold text-slate-400 block mb-1" data-i18n="conj_filter_level">Nivel:</label>
+              <select id="conj-level-select" onchange="resetConjugatorGame()" class="bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1 text-xs text-white">
+                <option value="A1">Principiante A1-A2 (Hablar, Comer, Ir)</option>
+                <option value="B1">Intermedio B1-B2 (Tener, Hacer, Querer)</option>
+                <option value="C1">Avanzado C1-C2 (Subjuntivos y Tiempos Compuestos)</option>
+              </select>
+            </div>
+            <div>
+              <label class="text-[11px] font-bold text-slate-400 block mb-1" data-i18n="conj_filter_tense">Tiempo Verbal:</label>
+              <select id="conj-tense-select" onchange="resetConjugatorGame()" class="bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1 text-xs text-white">
+                <option value="present">Presente de Indicativo</option>
+                <option value="preterite">Pretérito Indefinido (Pasado)</option>
+                <option value="imperfect">Pretérito Imperfecto</option>
+                <option value="future">Futuro Simple</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Score Display -->
+          <div class="flex items-center gap-4 bg-slate-900/80 border border-slate-800 px-4 py-2 rounded-2xl">
+            <div class="text-center">
+              <span class="text-[10px] text-slate-400 block font-bold" data-i18n="game_score">PUNTOS</span>
+              <span class="text-lg font-black text-emerald-400" id="conj-score">0</span>
+            </div>
+            <div class="h-6 w-px bg-slate-800"></div>
+            <div class="text-center">
+              <span class="text-[10px] text-slate-400 block font-bold" data-i18n="game_streak">RACHA</span>
+              <span class="text-lg font-black text-amber-400" id="conj-streak">0 🔥</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Question Card -->
+        <div class="max-w-xl mx-auto text-center space-y-4 py-4">
+          <div class="inline-block px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold">
+            <span id="conj-prompt-tense">Presente</span> &bull; <span id="conj-prompt-verb" class="underline">Hablar</span>
+          </div>
+
+          <h4 class="text-2xl sm:text-3xl font-black text-white" id="conj-prompt-subject">
+            Yo (Hablar)
+          </h4>
+          <p class="text-xs text-slate-400" id="conj-prompt-translation">I speak / I am speaking</p>
+
+          <form onsubmit="checkConjugationAnswer(event)" class="space-y-3 pt-2">
+            <div class="relative max-w-sm mx-auto">
+              <input type="text" id="conj-answer-input" placeholder="Escribe la conjugación aquí..." autocomplete="off" required class="w-full bg-slate-900 border-2 border-slate-700 focus:border-emerald-500 rounded-2xl px-4 py-3 text-center text-lg font-bold text-white focus:outline-none transition">
+            </div>
+
+            <!-- Accent Keyboard Helpers -->
+            <div class="flex items-center justify-center gap-1.5 pt-1">
+              <button type="button" onclick="insertAccent('á')" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs border border-slate-700 transition">á</button>
+              <button type="button" onclick="insertAccent('é')" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs border border-slate-700 transition">é</button>
+              <button type="button" onclick="insertAccent('í')" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs border border-slate-700 transition">í</button>
+              <button type="button" onclick="insertAccent('ó')" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs border border-slate-700 transition">ó</button>
+              <button type="button" onclick="insertAccent('ú')" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs border border-slate-700 transition">ú</button>
+              <button type="button" onclick="insertAccent('ñ')" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs border border-slate-700 transition">ñ</button>
+            </div>
+
+            <div class="flex justify-center gap-3 pt-2">
+              <button type="submit" class="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm transition shadow-lg shadow-emerald-600/20">
+                <i class="fas fa-check mr-1"></i> <span data-i18n="game_btn_check">Comprobar</span>
+              </button>
+              <button type="button" onclick="nextConjugatorQuestion()" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-sm transition">
+                <span data-i18n="game_btn_skip">Saltar</span> <i class="fas fa-arrow-right ml-1"></i>
+              </button>
+            </div>
+          </form>
+
+          <!-- Feedback Box -->
+          <div id="conj-feedback-box" class="hidden p-3 rounded-xl text-xs font-bold text-center"></div>
+        </div>
+      </div>
+
+      <!-- GAME 2: Vocab Association Matcher -->
+      <div id="game-container-matching" class="hidden glass-card rounded-3xl p-6 space-y-6">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+          <div>
+            <h4 class="font-bold text-white text-base" data-i18n="match_title">Emparejamiento de Vocabulario</h4>
+            <p class="text-xs text-slate-400" data-i18n="match_desc">Selecciona una palabra en español y luego su traducción correspondiente en inglés.</p>
+          </div>
+          <button onclick="initMatchingGame()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-200">
+            <i class="fas fa-sync-alt mr-1"></i> Reiniciar
+          </button>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3" id="matching-grid">
+          <!-- Cards rendered dynamically -->
+        </div>
+      </div>
+
+      <!-- GAME 3: Sentence Scramble / La Frase Misteriosa -->
+      <div id="game-container-scramble" class="hidden glass-card rounded-3xl p-6 space-y-6 text-center">
+        <div class="space-y-1">
+          <h4 class="font-bold text-white text-lg" data-i18n="scramble_title">Ordena la Frase</h4>
+          <p class="text-xs text-slate-400" id="scramble-english-hint">English target hint will appear here</p>
+        </div>
+
+        <!-- Selected Word Slot -->
+        <div class="min-h-[60px] p-4 rounded-2xl bg-slate-900 border-2 border-dashed border-slate-700 flex flex-wrap items-center justify-center gap-2" id="scramble-answer-slots">
+          <!-- Selected words appear here -->
+        </div>
+
+        <!-- Available Word Chips -->
+        <div class="flex flex-wrap items-center justify-center gap-2.5 pt-2" id="scramble-word-pool">
+          <!-- Word buttons rendered here -->
+        </div>
+
+        <div class="flex justify-center gap-3 pt-4">
+          <button onclick="checkScrambleAnswer()" class="px-6 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition">
+            <i class="fas fa-check mr-1"></i> Comprobar Frase
+          </button>
+          <button onclick="resetCurrentScramble()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs transition">
+            Borrar
+          </button>
+          <button onclick="nextScrambleQuestion()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs transition">
+            Siguiente
+          </button>
+        </div>
+        <div id="scramble-feedback" class="hidden p-3 rounded-xl text-xs font-bold max-w-md mx-auto"></div>
+      </div>
+
+      <!-- GAME 4: Audio Listening Comprehension -->
+      <div id="game-container-audio" class="hidden glass-card rounded-3xl p-6 space-y-6 text-center max-w-xl mx-auto">
+        <div class="space-y-2">
+          <h4 class="font-bold text-white text-lg" data-i18n="audio_game_title">Entrenamiento Auditivo</h4>
+          <p class="text-xs text-slate-400" data-i18n="audio_game_desc">Escucha la pronunciación en español y elige la traducción correcta.</p>
+        </div>
+
+        <div class="py-6">
+          <button onclick="playCurrentAudioPrompt()" class="w-20 h-20 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-600 hover:scale-105 transition transform text-white text-2xl shadow-xl shadow-emerald-500/20 mx-auto flex items-center justify-center">
+            <i class="fas fa-volume-up"></i>
+          </button>
+          <p class="text-[11px] text-slate-400 mt-2" data-i18n="audio_btn_listen">Haz clic para escuchar</p>
+        </div>
+
+        <!-- Multiple Choice Options -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="audio-choice-grid">
+          <!-- Choice buttons -->
+        </div>
+
+        <div id="audio-feedback" class="hidden p-3 rounded-xl text-xs font-bold"></div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: Community Music & Song Sharing Hub -->
+    <section id="music-section" class="space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+        <div>
+          <h3 class="text-2xl font-black text-white flex items-center gap-2">
+            <i class="fas fa-music text-pink-400"></i>
+            <span data-i18n="music_section_title">Música del Club y Radio</span>
+          </h3>
+          <p class="text-xs text-slate-400" data-i18n="music_section_desc">Escucha canciones recomendadas por miembros, practica letras y aprende nuevo vocabulario.</p>
+        </div>
+
+        <button onclick="openAddMusicModal()" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-500 hover:to-rose-500 text-white font-bold text-xs transition shadow-md shadow-pink-600/20 flex items-center gap-1.5 self-start sm:self-auto">
+          <i class="fas fa-plus-circle"></i>
+          <span data-i18n="btn_add_music">Recomendar Canción</span>
+        </button>
+      </div>
+
+      <!-- Music Main Dashboard Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- Left: Audio Player Console (1 Col) -->
+        <div class="glass-card rounded-3xl p-6 flex flex-col justify-between space-y-5 border border-pink-500/20 shadow-xl">
+          <div class="space-y-4">
+            <!-- Cover Art & Badges -->
+            <div class="relative rounded-2xl overflow-hidden aspect-video bg-slate-900 border border-slate-800 shadow-md">
+              <img id="now-playing-cover" src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover" alt="Song Cover">
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-transparent to-transparent flex items-end p-4">
+                <div class="w-full">
+                  <div class="flex items-center justify-between gap-2">
+                    <span id="now-playing-genre" class="px-2 py-0.5 rounded-full bg-pink-500/80 text-white text-[10px] font-bold uppercase tracking-wider">Salsa</span>
+                    <span id="now-playing-difficulty" class="px-2 py-0.5 rounded-full bg-indigo-500/80 text-white text-[10px] font-bold">Principiante</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Song Info -->
+            <div class="space-y-1">
+              <h4 id="now-playing-title" class="text-xl font-black text-white truncate">Vivir Mi Vida</h4>
+              <p id="now-playing-artist" class="text-xs font-semibold text-slate-300 truncate">Marc Anthony</p>
+              <div class="flex items-center justify-between text-[11px] text-slate-400 pt-1">
+                <span id="now-playing-country"><i class="fas fa-map-marker-alt"></i> Puerto Rico / USA</span>
+                <span id="now-playing-submitter"><i class="fas fa-user-circle"></i> Compartido por Elena R.</span>
+              </div>
+            </div>
+
+            <!-- Scrub Bar -->
+            <div class="space-y-1 pt-2">
+              <input type="range" id="audio-progress" min="0" max="100" value="0" oninput="seekAudio(this.value)" class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-pink-500">
+              <div class="flex items-center justify-between text-[10px] text-slate-400 font-mono">
+                <span id="audio-current-time">0:00</span>
+                <span id="audio-duration">0:00</span>
+              </div>
+            </div>
+
+            <!-- Controls Buttons -->
+            <div class="flex items-center justify-center gap-4 pt-1">
+              <button onclick="playPrevTrack()" class="text-slate-400 hover:text-white transition text-lg">
+                <i class="fas fa-step-backward"></i>
+              </button>
+              <button onclick="toggleAudioPlay()" id="main-play-btn" class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-pink-600 to-rose-500 hover:scale-105 transition transform text-white shadow-lg shadow-pink-600/30 flex items-center justify-center">
+                <i id="play-icon" class="fas fa-play text-lg ml-0.5"></i>
+              </button>
+              <button onclick="playNextTrack()" class="text-slate-400 hover:text-white transition text-lg">
+                <i class="fas fa-step-forward"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Bottom: Like & External Spotify Link -->
+          <div class="pt-4 border-t border-slate-800 flex items-center justify-between">
+            <button onclick="likeCurrentTrack()" class="flex items-center gap-1.5 text-xs font-bold text-pink-400 hover:text-pink-300 bg-pink-500/10 border border-pink-500/20 px-3 py-1.5 rounded-xl transition">
+              <i class="fas fa-heart text-pink-500"></i>
+              <span id="now-playing-likes-count">18 Likes</span>
+            </button>
+            
+            <a id="now-playing-external" href="#" target="_blank" class="text-xs font-bold text-slate-300 hover:text-white flex items-center gap-1">
+              <i class="fab fa-spotify text-emerald-400 text-sm"></i> Spotify / App
+            </a>
+          </div>
+        </div>
+
+        <!-- Right: Song Playlist & Lyrics / Vocab Tabs (2 Cols) -->
+        <div class="lg:col-span-2 glass-card rounded-3xl p-6 space-y-5">
+          <!-- Filter Controls Bar -->
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 border-b border-slate-800 pb-4">
+            <!-- Search Input -->
+            <div class="relative flex-grow max-w-xs">
+              <i class="fas fa-search absolute left-3 top-2.5 text-xs text-slate-400"></i>
+              <input type="text" onkeyup="handleMusicSearch(this.value)" placeholder="Buscar por título, artista..." class="w-full bg-slate-900 border border-slate-700 rounded-xl pl-8 pr-3 py-1.5 text-xs text-white focus:outline-none focus:border-pink-500">
+            </div>
+
+            <!-- Genre Filter Buttons -->
+            <div class="flex items-center gap-1 overflow-x-auto pb-1 sm:pb-0">
+              <button onclick="filterMusic('all')" data-genre="all" class="music-genre-btn px-3 py-1 rounded-lg text-xs font-medium bg-pink-600 text-white transition">Todos</button>
+              <button onclick="filterMusic('Salsa')" data-genre="Salsa" class="music-genre-btn px-3 py-1 rounded-lg text-xs font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 transition">Salsa</button>
+              <button onclick="filterMusic('Flamenco')" data-genre="Flamenco" class="music-genre-btn px-3 py-1 rounded-lg text-xs font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 transition">Flamenco</button>
+              <button onclick="filterMusic('Reggaeton')" data-genre="Reggaeton" class="music-genre-btn px-3 py-1 rounded-lg text-xs font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 transition">Reggaeton</button>
+              <button onclick="filterMusic('Indie Latino')" data-genre="Indie Latino" class="music-genre-btn px-3 py-1 rounded-lg text-xs font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 transition">Indie</button>
+            </div>
+          </div>
+
+          <!-- Playlist Song Grid -->
+          <div class="space-y-2 max-h-[200px] overflow-y-auto pr-1" id="music-playlist-grid">
+            <!-- Playlist Tracks Rendered dynamically -->
+          </div>
+
+          <!-- Lyrics & Vocabulary Study Subtabs -->
+          <div class="pt-2 border-t border-slate-800 space-y-3">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <button onclick="switchLyricsSubtab('lyrics')" id="subtab-btn-lyrics" class="text-xs font-bold px-3 py-1.5 rounded-lg bg-pink-600 text-white transition flex items-center gap-1.5">
+                  <i class="fas fa-align-left"></i> Letra de la Canción
+                </button>
+                <button onclick="switchLyricsSubtab('vocab')" id="subtab-btn-vocab" class="text-xs font-bold px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition flex items-center gap-1.5">
+                  <i class="fas fa-book"></i> Vocabulario Clave
+                </button>
+              </div>
+
+              <button onclick="toggleLyricsLanguage()" id="lyrics-lang-toggle" class="text-[10px] font-bold text-slate-400 hover:text-white bg-slate-900 border border-slate-800 px-2 py-1 rounded-md">
+                AMBOS
+              </button>
+            </div>
+
+            <!-- Content Area for Lyrics & Vocab -->
+            <div class="p-4 rounded-2xl bg-slate-950/80 border border-slate-800 min-h-[120px] max-h-[160px] overflow-y-auto text-xs space-y-2" id="lyrics-container">
+              <!-- Lyrics rendered here -->
+            </div>
+
+            <div class="hidden p-4 rounded-2xl bg-slate-950/80 border border-slate-800 min-h-[120px] max-h-[160px] overflow-y-auto text-xs space-y-2" id="vocab-container">
+              <!-- Key vocab list rendered here -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: Club Learning Resource Library -->
+    <section id="resources-section" class="space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+        <div>
+          <h3 class="text-2xl font-black text-white flex items-center gap-2">
+            <i class="fas fa-photo-video text-indigo-400"></i>
+            <span data-i18n="resources_section_title">Biblioteca de Recursos Multimedia</span>
+          </h3>
+          <p class="text-xs text-slate-400" data-i18n="resources_section_desc">Explora podcasts, películas, videos y lecturas compartidas por los miembros.</p>
+        </div>
+
+        <!-- Filter Buttons for Media Type -->
+        <div class="flex flex-wrap items-center gap-1.5" id="media-type-filters">
+          <button onclick="filterMediaType('all')" data-type="all" class="media-type-btn px-3 py-1 rounded-lg text-xs font-bold bg-indigo-600 text-white transition">Todos</button>
+          <button onclick="filterMediaType('podcast')" data-type="podcast" class="media-type-btn px-3 py-1 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition">Podcasts</button>
+          <button onclick="filterMediaType('movie')" data-type="movie" class="media-type-btn px-3 py-1 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition">Películas</button>
+          <button onclick="filterMediaType('video')" data-type="video" class="media-type-btn px-3 py-1 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition">Videos</button>
+          <button onclick="filterMediaType('book')" data-type="book" class="media-type-btn px-3 py-1 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition">Libros</button>
+        </div>
+      </div>
+
+      <!-- Resource Cards Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="resources-grid">
+        <!-- Resource Cards Rendered Dynamically -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MODAL 1: Add New Resource Modal -->
+  <div id="add-resource-modal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="glass-card rounded-3xl max-w-lg w-full p-6 space-y-5 border border-slate-700 shadow-2xl relative">
+      <button onclick="closeAddResourceModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg">
+        <i class="fas fa-times"></i>
+      </button>
+
+      <div class="space-y-1">
+        <h3 class="text-xl font-bold text-white flex items-center gap-2">
+          <i class="fas fa-plus-circle text-pink-500"></i>
+          <span data-i18n="modal_res_title">Añadir Nuevo Recurso</span>
+        </h3>
+        <p class="text-xs text-slate-400" data-i18n="modal_res_desc">Comparte un podcast, película o video útil con el club.</p>
+      </div>
+
+      <form onsubmit="handleAddResourceSubmit(event)" class="space-y-3 text-xs">
+        <div>
+          <label class="font-bold text-slate-300 block mb-1">Título / Title *</label>
+          <input type="text" id="input-res-title" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-pink-500">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="font-bold text-slate-300 block mb-1">Tipo de Recurso *</label>
+            <select id="input-res-type" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white">
+              <option value="podcast">Podcast</option>
+              <option value="movie">Película / Serie</option>
+              <option value="video">Video de YouTube</option>
+              <option value="book">Libro / Lectura</option>
+            </select>
+          </div>
+          <div>
+            <label class="font-bold text-slate-300 block mb-1">Nivel Dificultad *</label>
+            <select id="input-res-level" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white">
+              <option value="Principiante">Principiante (A1-A2)</option>
+              <option value="Intermedio">Intermedio (B1-B2)</option>
+              <option value="Avanzado">Avanzado (C1-C2)</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="font-bold text-slate-300 block mb-1">Enlace / Web Link (URL) *</label>
+          <input type="url" id="input-res-url" required placeholder="https://..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-pink-500">
+        </div>
+
+        <div>
+          <label class="font-bold text-slate-300 block mb-1">Descripción en Español *</label>
+          <textarea id="input-res-desc-es" required rows="2" placeholder="¿De qué trata este recurso y por qué lo recomiendas?" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-pink-500"></textarea>
+        </div>
+
+        <div>
+          <label class="font-bold text-slate-300 block mb-1">English Description (Optional)</label>
+          <textarea id="input-res-desc-en" rows="2" placeholder="Brief summary in English for beginners..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-pink-500"></textarea>
+        </div>
+
+        <div class="pt-2 flex justify-end gap-2">
+          <button type="button" onclick="closeAddResourceModal()" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 font-bold">Cancelar</button>
+          <button type="submit" class="px-5 py-2 rounded-xl bg-pink-600 hover:bg-pink-500 text-white font-bold shadow-md shadow-pink-600/20">Guardar Recurso</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 2: Add Music Recommendation Modal -->
+  <div id="add-music-modal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="glass-card rounded-3xl max-w-lg w-full p-6 space-y-5 border border-slate-700 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+      <button onclick="closeAddMusicModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg">
+        <i class="fas fa-times"></i>
+      </button>
+
+      <div class="space-y-1">
+        <h3 class="text-xl font-bold text-white flex items-center gap-2">
+          <i class="fas fa-music text-pink-500"></i>
+          <span data-i18n="modal_music_title">Recomendar Canción al Club</span>
+        </h3>
+        <p class="text-xs text-slate-400" data-i18n="modal_music_desc">Agrega tus canciones favoritas en español para escuchar en grupo.</p>
+      </div>
+
+      <form onsubmit="handleAddTrackSubmit(event)" class="space-y-3 text-xs">
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="font-bold text-slate-300 block mb-1">Título de Canción *</label>
+            <input type="text" id="input-track-title" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white">
+          </div>
+          <div>
+            <label class="font-bold text-slate-300 block mb-1">Artista *</label>
+            <input type="text" id="input-track-artist" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-3 gap-2">
+          <div>
+            <label class="font-bold text-slate-300 block mb-1">Género *</label>
+            <select id="input-track-genre" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-2 py-2 text-white">
+              <option value="Salsa">Salsa</option>
+              <option value="Flamenco">Flamenco</option>
+              <option value="Reggaeton">Reggaeton</option>
+              <option value="Indie Latino">Indie Latino</option>
+              <option value="Pop">Pop</option>
+              <option value="Bachata">Bachata</option>
+            </select>
+          </div>
+          <div>
+            <label class="font-bold text-slate-300 block mb-1">País *</label>
+            <input type="text" id="input-track-country" placeholder="España, Colombia..." required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-2 py-2 text-white">
+          </div>
+          <div>
+            <label class="font-bold text-slate-300 block mb-1">Dificultad *</label>
+            <select id="input-track-difficulty" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-2 py-2 text-white">
+              <option value="Principiante">Principiante</option>
+              <option value="Intermedio">Intermedio</option>
+              <option value="Avanzado">Avanzado</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="font-bold text-slate-300 block mb-1">Enlace MP3 / Audio Stream URL (Opcional)</label>
+          <input type="url" id="input-track-url" placeholder="https://...mp3" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white">
+        </div>
+
+        <div>
+          <label class="font-bold text-slate-300 block mb-1">Enlace a Spotify / YouTube (Opcional)</label>
+          <input type="url" id="input-track-external" placeholder="https://open.spotify.com/track/..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white">
+        </div>
+
+        <div>
+          <label class="font-bold text-slate-300 block mb-1">Nota o Comentario para el Club</label>
+          <input type="text" id="input-track-note" placeholder="¿Por qué te gusta o qué gramática tiene?" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white">
+        </div>
+
+        <div>
+          <label class="font-bold text-slate-300 block mb-1">Fragmento de Letra (Español)</label>
+          <textarea id="input-track-lyrics-es" rows="2" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white"></textarea>
+        </div>
+
+        <div>
+          <label class="font-bold text-slate-300 block mb-1">English Translation Sample</label>
+          <textarea id="input-track-lyrics-en" rows="2" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white"></textarea>
+        </div>
+
+        <div class="pt-2 flex justify-end gap-2">
+          <button type="button" onclick="closeAddMusicModal()" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 font-bold">Cancelar</button>
+          <button type="submit" class="px-5 py-2 rounded-xl bg-pink-600 hover:bg-pink-500 text-white font-bold shadow-md shadow-pink-600/20">Añadir Canción</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- JavaScript Logic -->
+  <script>
+    // Language State ('es' or 'en')
+    let currentLang = localStorage.getItem('spanish_hub_lang') || 'es';
+
+    const TRANSLATIONS = {
+      es: {
+        nav_chat: "Practicar Chat",
+        nav_games: "Juegos",
+        nav_music: "Música",
+        nav_resources: "Recursos",
+        btn_add_content: "Añadir Contenido",
+        hero_badge: "¡Bienvenidos al Club de Español!",
+        hero_title: "Tu centro comunitario para dominar el español juntos",
+        hero_desc: "Un espacio colaborativo donde todos los miembros del club pueden charlar, jugar con la gramática, recomendar canciones, compartir podcasts y películas en español.",
+        stat_members: "Miembros activos",
+        stat_songs: "Canciones",
+        stat_games: "Juegos educativos",
+        stat_resources: "Recursos multimedia",
+        chat_section_title: "Foro de Práctica y Charla",
+        chat_section_desc: "Comparte con otros miembros en español sin miedo a equivocarte.",
+        chat_prompt_label: "Pregunta del Día / Daily Prompt",
+        chat_btn_reply_prompt: "Responder Tema",
+        chat_btn_send: "Enviar",
+        chat_profile_title: "Tu Perfil en el Chat",
+        chat_user_name_label: "Tu Nombre / Apodo:",
+        chat_user_level_label: "Tu Nivel de Español:",
+        chat_rules_title: "Reglas del Foro:",
+        chat_rule_1: "Sé amable y apoya a los demás aprendices.",
+        chat_rule_2: "Está bien cometer errores, ¡así se aprende!",
+        chat_rule_3: "Ayuda a corregir con respeto si te lo piden.",
+        games_section_title: "Zona de Juegos Interactivos",
+        games_section_desc: "Aprende gramática, vocabulario y comprensión auditiva de forma divertida.",
+        game_tab_conjugator: "Conjugador",
+        game_tab_matching: "Parejas",
+        game_tab_scramble: "La Frase",
+        game_tab_audio: "Comprensión",
+        conj_filter_level: "Nivel:",
+        conj_filter_tense: "Tiempo Verbal:",
+        game_score: "PUNTOS",
+        game_streak: "RACHA",
+        game_btn_check: "Comprobar",
+        game_btn_skip: "Saltar",
+        match_title: "Emparejamiento de Vocabulario",
+        match_desc: "Selecciona una palabra en español y luego su traducción correspondiente en inglés.",
+        scramble_title: "Ordena la Frase",
+        audio_game_title: "Entrenamiento Auditivo",
+        audio_game_desc: "Escucha la pronunciación en español y elige la traducción correcta.",
+        audio_btn_listen: "Haz clic para escuchar",
+        music_section_title: "Música del Club y Radio",
+        music_section_desc: "Escucha canciones recomendadas por miembros, practica letras y aprende nuevo vocabulario.",
+        btn_add_music: "Recomendar Canción",
+        resources_section_title: "Biblioteca de Recursos Multimedia",
+        resources_section_desc: "Explora podcasts, películas, videos y lecturas compartidas por los miembros.",
+        modal_res_title: "Añadir Nuevo Recurso",
+        modal_res_desc: "Comparte un podcast, película o video útil con el club.",
+        modal_music_title: "Recomendar Canción al Club",
+        modal_music_desc: "Agrega tus canciones favoritas en español para escuchar en grupo."
+      },
+      en: {
+        nav_chat: "Practice Chat",
+        nav_games: "Games",
+        nav_music: "Music",
+        nav_resources: "Resources",
+        btn_add_content: "Add Content",
+        hero_badge: "Welcome to the Spanish Club!",
+        hero_title: "Your community hub to master Spanish together",
+        hero_desc: "A collaborative space where all club members can chat, practice grammar through games, recommend songs, and share Spanish podcasts and movies.",
+        stat_members: "Active Members",
+        stat_songs: "Songs",
+        stat_games: "Learning Games",
+        stat_resources: "Media Resources",
+        chat_section_title: "Spanish Practice & Chat Forum",
+        chat_section_desc: "Connect with club members in Spanish without fear of making mistakes.",
+        chat_prompt_label: "Topic of the Day",
+        chat_btn_reply_prompt: "Reply to Topic",
+        chat_btn_send: "Send",
+        chat_profile_title: "Your Chat Profile",
+        chat_user_name_label: "Your Name / Nickname:",
+        chat_user_level_label: "Your Spanish Level:",
+        chat_rules_title: "Forum Guidelines:",
+        chat_rule_1: "Be kind and encourage fellow learners.",
+        chat_rule_2: "Making mistakes is a natural part of learning!",
+        chat_rule_3: "Provide respectful corrections when asked.",
+        games_section_title: "Interactive Arcade Center",
+        games_section_desc: "Learn grammar, vocabulary, and listening comprehension through fun mini-games.",
+        game_tab_conjugator: "Conjugator",
+        game_tab_matching: "Vocab Match",
+        game_tab_scramble: "Sentence Builder",
+        game_tab_audio: "Audio Trainer",
+        conj_filter_level: "Level:",
+        conj_filter_tense: "Verb Tense:",
+        game_score: "SCORE",
+        game_streak: "STREAK",
+        game_btn_check: "Check Answer",
+        game_btn_skip: "Skip",
+        match_title: "Vocabulary Matching",
+        match_desc: "Click a Spanish word and then match it to its correct English translation.",
+        scramble_title: "Sentence Scramble",
+        audio_game_title: "Listening Comprehension",
+        audio_game_desc: "Listen to the Spanish pronunciation and choose the correct English meaning.",
+        audio_btn_listen: "Click to play audio",
+        music_section_title: "Club Music & Radio",
+        music_section_desc: "Listen to member recommended songs, practice lyrics, and learn new vocabulary.",
+        btn_add_music: "Recommend Song",
+        resources_section_title: "Media & Learning Library",
+        resources_section_desc: "Explore podcasts, movies, videos, and reading materials shared by members.",
+        modal_res_title: "Add New Resource",
+        modal_res_desc: "Share a useful podcast, movie, or educational video with the club.",
+        modal_music_title: "Recommend Song to Club",
+        modal_music_desc: "Add your favorite Spanish tracks for everyone to listen to together."
+      }
+    };
+
+    function toggleGlobalLanguage() {
+      currentLang = currentLang === 'es' ? 'en' : 'es';
+      localStorage.setItem('spanish_hub_lang', currentLang);
+      applyLanguageUI();
+    }
+
+    function applyLanguageUI() {
+      const flagEl = document.getElementById('lang-flag');
+      const textEl = document.getElementById('lang-text');
+      if (flagEl) flagEl.textContent = currentLang === 'es' ? '🇪🇸' : '🇺🇸';
+      if (textEl) textEl.textContent = currentLang.toUpperCase();
+
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (TRANSLATIONS[currentLang] && TRANSLATIONS[currentLang][key]) {
+          el.textContent = TRANSLATIONS[currentLang][key];
+        }
+      });
+
+      renderMediaResources();
+      renderLyrics();
+    }
+
+    const INITIAL_CHAT_MESSAGES = [
+      {
+        id: 'c1',
+        userName: 'Mateo G.',
+        userLevel: 'Intermedio',
+        time: '10:15 AM',
+        text: '¡Hola a todos! ¿Alguien quiere practicar conversación en español hoy por la tarde?',
+        levelCategory: 'intermediate',
+        likes: 4
+      },
+      {
+        id: 'c2',
+        userName: 'Sofia M.',
+        userLevel: 'Principiante',
+        time: '10:30 AM',
+        text: '¡Hola Mateo! Yo puedo. Estoy aprendiendo el pretérito y necesito practicar.',
+        levelCategory: 'beginner',
+        likes: 2
+      },
+      {
+        id: 'c3',
+        userName: 'Carlos V. (Nativo)',
+        userLevel: 'Nativo',
+        time: '11:00 AM',
+        text: '¡Mucho éxito chicos! Recuerden escuchar música en español, ayuda mucho con el oído.',
+        levelCategory: 'advanced',
+        likes: 6
+      }
+    ];
+
+    let chatMessages;
+    try {
+      const stored = localStorage.getItem('spanish_hub_chat');
+      chatMessages = stored ? JSON.parse(stored) : INITIAL_CHAT_MESSAGES;
+    } catch(e) {
+      chatMessages = INITIAL_CHAT_MESSAGES;
+    }
+
+    let activeChatFilter = 'all';
+
+    function filterChatLevel(level) {
+      activeChatFilter = level;
+      document.querySelectorAll('.chat-level-btn').forEach(btn => {
+        if (btn.getAttribute('data-chat-level') === level) {
+          btn.className = 'chat-level-btn px-3 py-1 rounded-lg text-xs font-bold bg-amber-500 text-slate-950 transition';
+        } else {
+          btn.className = 'chat-level-btn px-3 py-1 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition';
+        }
+      });
+      renderChatMessages();
+    }
+
+    function renderChatMessages() {
+      const container = document.getElementById('chat-messages-container');
+      if (!container) return;
+
+      const filtered = chatMessages.filter(m => activeChatFilter === 'all' || m.levelCategory === activeChatFilter);
+
+      if (filtered.length === 0) {
+        container.innerHTML = `<p class="text-center text-xs text-slate-500 italic py-8">No hay mensajes en esta categoría. ¡Sé el primero en escribir!</p>`;
+        return;
+      }
+
+      container.innerHTML = filtered.map(m => `
+        <div class="p-3 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-1.5">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="font-bold text-xs text-white">${m.userName}</span>
+              <span class="text-[9px] bg-slate-800 border border-slate-700 px-2 py-0.5 rounded-full text-amber-400 font-semibold">${m.userLevel}</span>
+            </div>
+            <span class="text-[10px] text-slate-500">${m.time}</span>
+          </div>
+          <p class="text-xs text-slate-200 leading-relaxed">${m.text}</p>
+          <div class="flex items-center justify-end pt-1">
+            <button onclick="likeChatMessage('${m.id}')" class="text-[10px] text-slate-400 hover:text-amber-400 flex items-center gap-1 transition">
+              <i class="fas fa-thumbs-up"></i> <span>${m.likes || 0}</span>
+            </button>
+          </div>
+        </div>
+      `).join('');
+
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function handleSendChatMessage(e) {
+      e.preventDefault();
+      const input = document.getElementById('chat-input-text');
+      const nameInput = document.getElementById('chat-user-name');
+      const levelSelect = document.getElementById('chat-user-level');
+
+      if (!input || !input.value.trim()) return;
+
+      const userLvl = levelSelect ? levelSelect.value : 'Intermedio';
+      let lvlCategory = 'intermediate';
+      if (userLvl.includes('Principiante')) lvlCategory = 'beginner';
+      if (userLvl.includes('Avanzado') || userLvl.includes('Nativo')) lvlCategory = 'advanced';
+
+      const newMsg = {
+        id: 'c_' + Date.now(),
+        userName: nameInput && nameInput.value.trim() ? nameInput.value.trim() : 'Estudiante',
+        userLevel: userLvl,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        text: input.value.trim(),
+        levelCategory: lvlCategory,
+        likes: 0
+      };
+
+      chatMessages.push(newMsg);
+      localStorage.setItem('spanish_hub_chat', JSON.stringify(chatMessages));
+      input.value = '';
+      renderChatMessages();
+    }
+
+    function likeChatMessage(id) {
+      const msg = chatMessages.find(m => m.id === id);
+      if (msg) {
+        msg.likes = (msg.likes || 0) + 1;
+        localStorage.setItem('spanish_hub_chat', JSON.stringify(chatMessages));
+        renderChatMessages();
+      }
+    }
+
+    function replyToPrompt() {
+      const promptText = document.getElementById('chat-prompt-text')?.textContent;
+      const input = document.getElementById('chat-input-text');
+      if (input && promptText) {
+        input.value = `[Respuesta al tema: "${promptText}"] `;
+        input.focus();
+      }
+    }
+
+    const VERB_DATABASE = {
+      A1: [
+        { verb: 'hablar', english: 'to speak', present: { Yo: 'hablo', Tú: 'hablas', Él: 'habla', Nosotros: 'hablamos', Ellos: 'hablan' }, preterite: { Yo: 'hablé', Tú: 'hablaste', Él: 'habló', Nosotros: 'hablamos', Ellos: 'hablaron' }, imperfect: { Yo: 'hablaba', Tú: 'hablabas', Él: 'hablaba', Nosotros: 'hablábamos', Ellos: 'hablaban' }, future: { Yo: 'hablaré', Tú: 'hablarás', Él: 'hablará', Nosotros: 'hablaremos', Ellos: 'hablarán' } },
+        { verb: 'comer', english: 'to eat', present: { Yo: 'como', Tú: 'comes', Él: 'come', Nosotros: 'comemos', Ellos: 'comen' }, preterite: { Yo: 'comí', Tú: 'comiste', Él: 'comió', Nosotros: 'comimos', Ellos: 'comieron' }, imperfect: { Yo: 'comía', Tú: 'comías', Él: 'comía', Nosotros: 'comíamos', Ellos: 'comían' }, future: { Yo: 'comeré', Tú: 'comerás', Él: 'comerá', Nosotros: 'comeremos', Ellos: 'comerán' } }
+      ],
+      B1: [
+        { verb: 'tener', english: 'to have', present: { Yo: 'tengo', Tú: 'tienes', Él: 'tiene', Nosotros: 'tenemos', Ellos: 'tienen' }, preterite: { Yo: 'tuve', Tú: 'tuviste', Él: 'tuvo', Nosotros: 'tuvimos', Ellos: 'tuvieron' }, imperfect: { Yo: 'tenía', Tú: 'tenías', Él: 'tenía', Nosotros: 'teníamos', Ellos: 'tenían' }, future: { Yo: 'tendré', Tú: 'tendrás', Él: 'tendrá', Nosotros: 'tendremos', Ellos: 'tendrán' } },
+        { verb: 'hacer', english: 'to do / make', present: { Yo: 'hago', Tú: 'haces', Él: 'hace', Nosotros: 'hacemos', Ellos: 'hacen' }, preterite: { Yo: 'hice', Tú: 'hiciste', Él: 'hizo', Nosotros: 'hicimos', Ellos: 'hicieron' }, imperfect: { Yo: 'hacía', Tú: 'hacías', Él: 'hacía', Nosotros: 'hacíamos', Ellos: 'hacían' }, future: { Yo: 'haré', Tú: 'harás', Él: 'hará', Nosotros: 'haremos', Ellos: 'harán' } }
+      ],
+      C1: [
+        { verb: 'querer', english: 'to want / love', present: { Yo: 'quiero', Tú: 'quieres', Él: 'quiere', Nosotros: 'queremos', Ellos: 'quieren' }, preterite: { Yo: 'quise', Tú: 'quisiste', Él: 'quiso', Nosotros: 'quisimos', Ellos: 'quisieron' }, imperfect: { Yo: 'quería', Tú: 'querías', Él: 'quería', Nosotros: 'queríamos', Ellos: 'querían' }, future: { Yo: 'querré', Tú: 'querrás', Él: 'querrá', Nosotros: 'querremos', Ellos: 'querrán' } }
+      ]
+    };
+
+    let currentConjScore = 0;
+    let currentConjStreak = 0;
+    let currentQuestion = null;
+
+    function switchGameTab(tab) {
+      const tabs = ['conjugator', 'matching', 'scramble', 'audio'];
+      tabs.forEach(t => {
+        const container = document.getElementById(`game-container-${t}`);
+        const tabBtn = document.getElementById(`game-tab-${t}`);
+        if (container) container.classList.add('hidden');
+        if (tabBtn) tabBtn.className = 'px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition flex items-center gap-1.5';
+      });
+
+      const activeContainer = document.getElementById(`game-container-${tab}`);
+      const activeTabBtn = document.getElementById(`game-tab-${tab}`);
+      if (activeContainer) activeContainer.classList.remove('hidden');
+      if (activeTabBtn) activeTabBtn.className = 'px-3.5 py-1.5 rounded-xl text-xs font-bold bg-emerald-600 text-white transition flex items-center gap-1.5';
+
+      if (tab === 'matching') initMatchingGame();
+      if (tab === 'scramble') initScrambleGame();
+      if (tab === 'audio') initAudioGame();
+    }
+
+    function resetConjugatorGame() {
+      nextConjugatorQuestion();
+    }
+
+    function nextConjugatorQuestion() {
+      const level = document.getElementById('conj-level-select')?.value || 'A1';
+      const tense = document.getElementById('conj-tense-select')?.value || 'present';
+      const pool = VERB_DATABASE[level] || VERB_DATABASE['A1'];
+      const verbObj = pool[Math.floor(Math.random() * pool.length)];
+
+      const subjects = ['Yo', 'Tú', 'Él', 'Nosotros', 'Ellos'];
+      const subject = subjects[Math.floor(Math.random() * subjects.length)];
+      const targetAnswer = verbObj[tense][subject];
+
+      currentQuestion = { verbObj, tense, subject, targetAnswer };
+
+      document.getElementById('conj-prompt-verb').textContent = verbObj.verb.toUpperCase();
+      document.getElementById('conj-prompt-subject').textContent = `${subject} (${verbObj.verb})`;
+      document.getElementById('conj-prompt-tense').textContent = tense.toUpperCase();
+      document.getElementById('conj-prompt-translation').textContent = verbObj.english;
+
+      const input = document.getElementById('conj-answer-input');
+      if (input) {
+        input.value = '';
+        input.focus();
+      }
+
+      const fb = document.getElementById('conj-feedback-box');
+      if (fb) fb.classList.add('hidden');
+    }
+
+    function insertAccent(char) {
+      const input = document.getElementById('conj-answer-input');
+      if (input) {
+        input.value += char;
+        input.focus();
+      }
+    }
+
+    function checkConjugationAnswer(e) {
+      e.preventDefault();
+      const input = document.getElementById('conj-answer-input');
+      const fb = document.getElementById('conj-feedback-box');
+      if (!input || !currentQuestion) return;
+
+      const userAns = input.value.trim().toLowerCase();
+      const target = currentQuestion.targetAnswer.toLowerCase();
+
+      if (userAns === target) {
+        currentConjScore += 10;
+        currentConjStreak += 1;
+        fb.textContent = `¡Excelente! Respuesta correcta: ${currentQuestion.subject} ${target}`;
+        fb.className = 'p-3 rounded-xl text-xs font-bold text-center bg-emerald-500/20 text-emerald-400 border border-emerald-500/30';
+      } else {
+        currentConjStreak = 0;
+        fb.textContent = `Incorrecto. La respuesta correcta era: "${target}"`;
+        fb.className = 'p-3 rounded-xl text-xs font-bold text-center bg-rose-500/20 text-rose-400 border border-rose-500/30';
+      }
+
+      document.getElementById('conj-score').textContent = currentConjScore;
+      document.getElementById('conj-streak').textContent = `${currentConjStreak} 🔥`;
+      fb.classList.remove('hidden');
+
+      setTimeout(() => {
+        nextConjugatorQuestion();
+      }, 1800);
+    }
+
+    const MATCHING_PAIRS = [
+      { es: 'La playa', en: 'The beach' },
+      { es: 'El libro', en: 'The book' },
+      { es: 'Viajar', en: 'To travel' },
+      { es: 'La manzana', en: 'The apple' }
+    ];
+
+    let selectedMatchCard = null;
+
+    function initMatchingGame() {
+      const grid = document.getElementById('matching-grid');
+      if (!grid) return;
+
+      let items = [];
+      MATCHING_PAIRS.forEach((pair, idx) => {
+        items.push({ id: idx, text: pair.es, type: 'es' });
+        items.push({ id: idx, text: pair.en, type: 'en' });
+      });
+
+      items.sort(() => Math.random() - 0.5);
+
+      grid.innerHTML = items.map((item, index) => `
+        <button onclick="handleMatchCardClick(this, ${item.id}, '${item.type}')" class="match-card p-4 rounded-2xl bg-slate-900 border border-slate-700 hover:border-emerald-500 font-bold text-sm text-white transition text-center min-h-[70px] flex items-center justify-center">
+          ${item.text}
+        </button>
+      `).join('');
+    }
+
+    function handleMatchCardClick(btn, id, type) {
+      if (btn.classList.contains('bg-emerald-600') || btn.disabled) return;
+
+      if (!selectedMatchCard) {
+        selectedMatchCard = { btn, id, type };
+        btn.classList.add('border-amber-400', 'bg-slate-800');
+      } else {
+        if (selectedMatchCard.btn === btn) return;
+
+        if (selectedMatchCard.id === id && selectedMatchCard.type !== type) {
+          selectedMatchCard.btn.className = 'p-4 rounded-2xl bg-emerald-600 text-white font-bold text-sm transition text-center min-h-[70px] flex items-center justify-center';
+          btn.className = 'p-4 rounded-2xl bg-emerald-600 text-white font-bold text-sm transition text-center min-h-[70px] flex items-center justify-center';
+          selectedMatchCard.btn.disabled = true;
+          btn.disabled = true;
+        } else {
+          selectedMatchCard.btn.className = 'match-card p-4 rounded-2xl bg-slate-900 border border-slate-700 hover:border-emerald-500 font-bold text-sm text-white transition text-center min-h-[70px] flex items-center justify-center';
+        }
+        selectedMatchCard = null;
+      }
+    }
+
+    const SCRAMBLE_QUESTIONS = [
+      { target: "Me gusta aprender español", hint: "I like to learn Spanish" },
+      { target: "Vamos a la playa el fin de semana", hint: "We are going to the beach this weekend" }
+    ];
+
+    let currentScrambleIdx = 0;
+    let selectedScrambleWords = [];
+
+    function initScrambleGame() {
+      const q = SCRAMBLE_QUESTIONS[currentScrambleIdx];
+      document.getElementById('scramble-english-hint').textContent = `Translate: "${q.hint}"`;
+      selectedScrambleWords = [];
+
+      const words = q.target.split(' ').sort(() => Math.random() - 0.5);
+      const pool = document.getElementById('scramble-word-pool');
+      if (pool) {
+        pool.innerHTML = words.map(w => `
+          <button onclick="pickScrambleWord(this, '${w}')" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-sm font-bold text-white transition">
+            ${w}
+          </button>
+        `).join('');
+      }
+
+      renderSelectedScrambleWords();
+    }
+
+    function pickScrambleWord(btn, word) {
+      selectedScrambleWords.push(word);
+      btn.disabled = true;
+      btn.classList.add('opacity-40');
+      renderSelectedScrambleWords();
+    }
+
+    function renderSelectedScrambleWords() {
+      const slots = document.getElementById('scramble-answer-slots');
+      if (slots) {
+        slots.innerHTML = selectedScrambleWords.map((w, idx) => `
+          <span class="px-3 py-1.5 rounded-lg bg-emerald-600 text-white font-bold text-sm shadow">
+            ${w}
+          </span>
+        `).join('');
+      }
+    }
+
+    function resetCurrentScramble() {
+      initScrambleGame();
+    }
+
+    function checkScrambleAnswer() {
+      const q = SCRAMBLE_QUESTIONS[currentScrambleIdx];
+      const userPhrase = selectedScrambleWords.join(' ');
+      const fb = document.getElementById('scramble-feedback');
+
+      if (userPhrase.toLowerCase() === q.target.toLowerCase()) {
+        fb.textContent = '¡Correcto! Excelente estructura de frase.';
+        fb.className = 'p-3 rounded-xl text-xs font-bold max-w-md mx-auto bg-emerald-500/20 text-emerald-400 border border-emerald-500/30';
+      } else {
+        fb.textContent = `Incorrecto. La frase correcta es: "${q.target}"`;
+        fb.className = 'p-3 rounded-xl text-xs font-bold max-w-md mx-auto bg-rose-500/20 text-rose-400 border border-rose-500/30';
+      }
+      fb.classList.remove('hidden');
+    }
+
+    function nextScrambleQuestion() {
+      currentScrambleIdx = (currentScrambleIdx + 1) % SCRAMBLE_QUESTIONS.length;
+      document.getElementById('scramble-feedback').classList.add('hidden');
+      initScrambleGame();
+    }
+
+    const AUDIO_QUESTIONS = [
+      { spanish: "El perro corre rápido", choices: ["The dog runs fast", "The cat sleeps quietly", "The bird sings loud"], correct: "The dog runs fast" },
+      { spanish: "Quiero una taza de café", choices: ["I want a cup of coffee", "I need a glass of water", "Where is the tea?"], correct: "I want a cup of coffee" }
+    ];
+
+    let currentAudioIdx = 0;
+
+    function initAudioGame() {
+      const q = AUDIO_QUESTIONS[currentAudioIdx];
+      const grid = document.getElementById('audio-choice-grid');
+      if (!grid) return;
+
+      grid.innerHTML = q.choices.map(c => `
+        <button onclick="checkAudioAnswer('${c}')" class="p-3.5 rounded-2xl bg-slate-900 border border-slate-700 hover:border-emerald-500 font-bold text-xs text-white transition">
+          ${c}
+        </button>
+      `).join('');
+
+      document.getElementById('audio-feedback').classList.add('hidden');
+    }
+
+    function playCurrentAudioPrompt() {
+      const q = AUDIO_QUESTIONS[currentAudioIdx];
+      if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(q.spanish);
+        utterance.lang = 'es-ES';
+        speechSynthesis.speak(utterance);
+      } else {
+        alert(`Pronunciación: ${q.spanish}`);
+      }
+    }
+
+    function checkAudioAnswer(choice) {
+      const q = AUDIO_QUESTIONS[currentAudioIdx];
+      const fb = document.getElementById('audio-feedback');
+
+      if (choice === q.correct) {
+        fb.textContent = `¡Correcto! "${q.spanish}" significa "${q.correct}"`;
+        fb.className = 'p-3 rounded-xl text-xs font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30';
+      } else {
+        fb.textContent = `Incorrecto. Inténtalo de nuevo.`;
+        fb.className = 'p-3 rounded-xl text-xs font-bold bg-rose-500/20 text-rose-400 border border-rose-500/30';
+      }
+      fb.classList.remove('hidden');
+    }
+
+    const INITIAL_RESOURCES = [
+      { id: 'r1', title: 'Notes in Spanish', type: 'podcast', level: 'Intermedio', url: 'https://www.notesinspanish.com', desc_es: 'Podcast conversacional en español real grabado por Ben y Marina.', desc_en: 'Conversational Spanish podcast recorded by native speakers.' },
+      { id: 'r2', title: 'Diarios de Motocicleta', type: 'movie', level: 'Avanzado', url: 'https://www.imdb.com', desc_es: 'Excelente película sobre el viaje por Sudamérica.', desc_en: 'Award winning movie exploring South American culture and accents.' },
+      { id: 'r3', title: 'Easy Spanish (YouTube)', type: 'video', level: 'Principiante', url: 'https://www.youtube.com/@EasySpanish', desc_es: 'Entrevistas callejeras con subtítulos en español e inglés.', desc_en: 'Street interviews with authentic local speed and subtitles.' }
+    ];
+
+    let mediaResources;
+    try {
+      const stored = localStorage.getItem('spanish_hub_resources');
+      mediaResources = stored ? JSON.parse(stored) : INITIAL_RESOURCES;
+    } catch(e) {
+      mediaResources = INITIAL_RESOURCES;
+    }
+
+    let activeMediaType = 'all';
+
+    function filterMediaType(type) {
+      activeMediaType = type;
+      document.querySelectorAll('.media-type-btn').forEach(btn => {
+        if (btn.getAttribute('data-type') === type) {
+          btn.className = 'media-type-btn px-3 py-1 rounded-lg text-xs font-bold bg-indigo-600 text-white transition';
+        } else {
+          btn.className = 'media-type-btn px-3 py-1 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition';
+        }
+      });
+      renderMediaResources();
+    }
+
+    function renderMediaResources() {
+      const grid = document.getElementById('resources-grid');
+      if (!grid) return;
+
+      const filtered = mediaResources.filter(r => activeMediaType === 'all' || r.type === activeMediaType);
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `<div class="col-span-full text-center py-8 text-xs text-slate-500 italic">No hay recursos disponibles en esta categoría.</div>`;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(r => `
+        <div class="glass-card rounded-2xl p-5 space-y-3 flex flex-col justify-between border border-slate-800 hover:border-indigo-500/50 transition">
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">${r.type}</span>
+              <span class="text-[10px] text-slate-400 font-semibold">${r.level}</span>
+            </div>
+            <h4 class="font-extrabold text-base text-white">${r.title}</h4>
+            <p class="text-xs text-slate-300 leading-relaxed">${currentLang === 'es' ? r.desc_es : (r.desc_en || r.desc_es)}</p>
+          </div>
+          <div class="pt-3 border-t border-slate-800/80 flex items-center justify-between">
+            <a href="${r.url}" target="_blank" class="text-xs font-bold text-indigo-400 hover:text-indigo-300 flex items-center gap-1">
+              Abrir Enlace <i class="fas fa-external-link-alt text-[10px]"></i>
+            </a>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function openAddResourceModal() {
+      document.getElementById('add-resource-modal')?.classList.remove('hidden');
+    }
+
+    function closeAddResourceModal() {
+      document.getElementById('add-resource-modal')?.classList.add('hidden');
+    }
+
+    function handleAddResourceSubmit(e) {
+      e.preventDefault();
+      const title = document.getElementById('input-res-title').value.trim();
+      const type = document.getElementById('input-res-type').value;
+      const level = document.getElementById('input-res-level').value;
+      const url = document.getElementById('input-res-url').value.trim();
+      const desc_es = document.getElementById('input-res-desc-es').value.trim();
+      const desc_en = document.getElementById('input-res-desc-en').value.trim();
+
+      const newRes = { id: 'r_' + Date.now(), title, type, level, url, desc_es, desc_en };
+      mediaResources.unshift(newRes);
+      localStorage.setItem('spanish_hub_resources', JSON.stringify(mediaResources));
+
+      closeAddResourceModal();
+      e.target.reset();
+      renderMediaResources();
+    }
+
+    // Page Initialization
+    window.addEventListener('DOMContentLoaded', () => {
+      applyLanguageUI();
+      renderChatMessages();
+      nextConjugatorQuestion();
+      renderMediaResources();
+    });
+  </script>
+</body>
+</html>
